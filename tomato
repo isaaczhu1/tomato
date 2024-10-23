@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# change to directory /Users/isaaczhu/MIT/canvas
-
-
 case "$1" in
   init)
     # Call a specific script or function for 'init'

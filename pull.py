@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import sys
 
+from download import *
 
 # Your Canvas API token
 API_TOKEN = sys.argv[-1]
@@ -57,8 +58,8 @@ def standardize_assignment_name(name):
             if char.isdigit():
                 number += char
         if number:
-            return f"pset{number}"
-    return name
+            return f"pset{number}", True
+    return name, False
 
 # Function to create a directory for each assignment
 def create_assignment_directories(assignments, base_directory):
@@ -72,11 +73,18 @@ def create_assignment_directories(assignments, base_directory):
         
         # Create a safe directory name (avoid illegal characters)
         safe_assignment_name = "".join([c if c.isalnum() else "_" for c in assignment_name])
-        directory_name = standardize_assignment_name(safe_assignment_name)
+        directory_name, is_pset = standardize_assignment_name(safe_assignment_name)
         directory_path = os.path.join(base_directory, directory_name)
 
         # Check if the directory already exists
         if not Path(directory_path).exists():
+            # prompt the user whether they want to create the directory
+            # if they don't, skip this assignment
+            user_input = input(f"Confirm pull '{assignment_name}'? (y/n): ").strip().lower()
+            if user_input != 'y':
+                print(f"Aborted pulling '{assignment_name}'.")
+                continue
+
             # Create the directory for this assignment
             Path(directory_path).mkdir(parents=True, exist_ok=True)
             
@@ -96,21 +104,38 @@ def create_assignment_directories(assignments, base_directory):
 
             print(f"Pulled assignment '{assignment_name}' (ID: {assignment_id}) and created directory.")
 
-            if False:
-                # often, there's an accompanying pdf file that needs to be downloaded
-                # it'll be in the assignment's description, as a substring like href=\"https://canvas.mit.edu/courses/28240/files/4521000?wrap=1\"
-                if 'href' in assignment['description']:
-                    # find the first instance of 'href' in the description
-                    start = assignment['description'].find('href')
-                    # find the first instance of 'https' after that
-                    start = assignment['description'].find('https', start)
-                    # find the first instance of '\"' after that
-                    end = assignment['description'].find('\"', start)
-                    # extract the url
-                    url = assignment['description'][start:end]
-                # remove the "?wrap=1" at the end of the url, and replace it with "/download"
-                url = url.replace("?wrap=1", "/download")
-                print(url)
+            
+            # often, there's an accompanying pdf file that needs to be downloaded
+            # the name of the file will be in the assignment description
+            # for instance ps4.pdf</a>
+            # extract the name of the file by looking for ".pdf</a>"
+            pdf_name = ''
+            # print(assignment['description'])
+            for i in range(len(assignment['description'])):
+                if assignment['description'][i:i+5] == '.pdf<':
+                    # go backwards until you find the start of the file name, which starts after ">"
+                    j = i
+                    while assignment['description'][j] != '>':
+                        j -= 1
+                    pdf_name = assignment['description'][j+1:i+4]
+                    break
+            if pdf_name:
+                # download the pdf file
+                print(f"Downloading attachment '{pdf_name}' for assignment '{assignment_name}'...")
+                actual_file_id = find_actual_file_id(COURSE_ID, pdf_name)
+                if is_pset:
+                    pset_number = assignment_name[4:]
+                    downloaded_name = f"problemset{pset_number}.pdf"
+                else:
+                    downloaded_name = pdf_name
+                download_file(actual_file_id, directory_path, downloaded_name)
+
+            if is_pset:
+                # create an instance of pset latex template
+                with open('pset_template.tex', 'r') as f:
+                    template = f.read()
+                with open(f'{directory_path}/{directory_name}.tex', 'w') as f:
+                    f.write(template)
 
         else:
             # print(f"Directory for assignment '{assignment_name}' already exists, skipping creation.")

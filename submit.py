@@ -8,25 +8,23 @@ API_TOKEN = sys.argv[-1]
 # The Canvas base URL (your school's Canvas instance domain)
 BASE_URL = sys.argv[-2]
 
-# Replace these with actual course and assignment IDs
+
+# go up until you find the .tomatoes directory in the root
 cnt = 0
 while not os.path.exists('.tomatoes'):
     os.chdir('..')
     cnt += 1
     if cnt > 10:
-        raise Exception("You have not initialized the Canvas info. Run can init.")
+        raise Exception("You have not initialized the Canvas info. Run tomato init")
 with open('.tomatoes/can_info.json', 'r') as f:
     COURSE_ID = json.load(f)['course_id']
 
-# to get the assignment ID, start from the current directory and go up until you find a directory psets
-# inside that directory, there should be a directory called psetn, where n is the assignment number
-# inside that directory, there should be a json file called assignment_info.json, which contains the assignment ID
+# get the assignment id from the name
 assignment_name = sys.argv[1]
 with open(f'psets/{assignment_name}/assignment_info.json', 'r') as f:
     ASSIGNMENT_ID = json.load(f)['Assignment ID']
 
 # Path to the PDF file you want to upload
-# PDF_FILE_PATH = '/Users/isaaczhu/MIT/24-25/fall/8_821/psets/pset1/problemset1.pdf'
 PDF_FILE_PATH = f'psets/{assignment_name}/{assignment_name}.pdf'
 
 # Step 1: Start the file upload process by getting the upload URL

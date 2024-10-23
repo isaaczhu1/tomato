@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# change to directory /Users/isaaczhu/MIT/canvas
+
+
+case "$1" in
+  init)
+    # Call a specific script or function for 'init'
+    /Users/isaaczhu/MIT/tomato/can-init.sh
+    ;;
+  push)
+    # Call a specific script or function for 'push'
+    /Users/isaaczhu/MIT/tomato/can-push.sh $2
+    ;;
+  pull)
+    # Call a specific script or function for 'pull'
+    /Users/isaaczhu/MIT/tomato/can-pull.sh
+    ;;
+  *)
+    echo "Usage: mytool {push|pull}"
+    exit 1
+    ;;
+esac

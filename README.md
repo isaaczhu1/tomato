@@ -7,8 +7,8 @@ export CANVAS_TOKEN=... # (see e.g. https://community.canvaslms.com/t5/Canvas-Ba
 
 export CANVAS_BASE="https://canvas.mit.edu/api/v1" # set appropriately
 
-export TOMATO_PATH="/Users/isaaczhu/MIT/tomato" # path to tomato
+export TOMATO_PATH="/Users/isaaczhu/MIT/tomato" # path to tomato, set appropriately
 
 and also
 
-export PATH="$PATH:/Users/isaaczhu/MIT/tomato" # set appropriately
+export PATH="$PATH:$TOMATO_PATH"

@@ -1,9 +1,13 @@
 import requests
 import os
 
+# get the environment variables $CANVAS_BASE and $CANVAS_TOKEN from the shell
 # Canvas API settings
-API_URL = "https://canvas.mit.edu/api/v1"
-ACCESS_TOKEN = "7867~F9HUWP7eLKL8a9nzMUtwLv6PtUAWELezkr9KDKWCa6nFQYzX22G4HNJCJmAQCTLU"
+API_URL = os.getenv("CANVAS_BASE")
+ACCESS_TOKEN = os.getenv("CANVAS_TOKEN")
+
+if not API_URL or not ACCESS_TOKEN:
+    raise EnvironmentError("Please set the CANVAS_BASE and CANVAS_TOKEN environment variables.")
 
 
 def list_course_files(course_id):

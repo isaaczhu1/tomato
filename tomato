@@ -3,15 +3,15 @@
 case "$1" in
   init)
     # Call a specific script or function for 'init'
-    /Users/isaaczhu/MIT/tomato/can-init.sh
+    $TOMATO_PATH/can-init.sh
     ;;
   push)
     # Call a specific script or function for 'push'
-    /Users/isaaczhu/MIT/tomato/can-push.sh $2
+    $TOMATO_PATH/can-push.sh $2
     ;;
   pull)
     # Call a specific script or function for 'pull'
-    /Users/isaaczhu/MIT/tomato/can-pull.sh
+    $TOMATO_PATH/can-pull.sh
     ;;
   *)
     echo "Usage: mytool {push|pull}"

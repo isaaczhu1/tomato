@@ -12,6 +12,8 @@ API_TOKEN = sys.argv[-1]
 # The Canvas base URL (your school's Canvas instance domain)
 BASE_URL = sys.argv[-2]
 
+TOMATO_PATH = sys.argv[-3]
+
 # to get the course ID, start from the current directory and go up until you find a directory .tomatoes
 # inside that directory, there should be a json file called can_info.json, which contains the course ID
 cnt = 0
@@ -132,7 +134,7 @@ def create_assignment_directories(assignments, base_directory):
 
             if is_pset:
                 # create an instance of pset latex template
-                with open('pset_template.tex', 'r') as f:
+                with open(TOMATO_PATH+'/pset_template.tex', 'r') as f:
                     template = f.read()
                 with open(f'{directory_path}/{directory_name}.tex', 'w') as f:
                     f.write(template)

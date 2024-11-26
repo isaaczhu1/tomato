@@ -2,5 +2,5 @@
 
 echo "Pulling from Canvas..."
 
-# run the python program /Users/isaaczhu/MIT/tomato/pull.py
-python3 /Users/isaaczhu/MIT/tomato/pull.py $CANVAS_BASE $CANVAS_TOKEN
+# run the python program $TOMATO_PATH/pull.py
+python3 $TOMATO_PATH/pull.py $TOMATO_PATH $CANVAS_BASE $CANVAS_TOKEN
